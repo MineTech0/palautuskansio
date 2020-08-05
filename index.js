@@ -3,6 +3,7 @@ var morgan = require('morgan')
 const app = express()
 
 app.use(express.json()) 
+app.use(express.static('build'))
 
 morgan.token('data', function (req, res) { return JSON.stringify(req.body)})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
@@ -38,11 +39,11 @@ app.get('/api/persons/:id', (req, res) => {
         res.status(404).end()
       }
   })
-  app.delete('/api/notes/:id', (req, res) => {
+  app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
-    response.status(204).end()
+    res.status(204).end()
   })
 
   app.post('/api/persons', (req, res) => {
