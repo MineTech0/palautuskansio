@@ -7,8 +7,8 @@ const Notification = ({ notification }) => {
     if(notification.error){
       return (
         <div className="error">
-          {notification.message}
-        </div>
+        {notification.message}
+      </div>
       )
     }
     else {

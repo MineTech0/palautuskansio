@@ -34,7 +34,7 @@ const App = () => {
     setFilter(e.target.value)
   }
   const handleDelete = (e) => {
-    const id = parseInt(e.target.value)
+    const id = e.target.value
     if (window.confirm("Delete " + persons.find(person => person.id === id).name + '?')) {
       PersonService
       .remove(id)
@@ -51,7 +51,7 @@ const App = () => {
       .catch(error => {
         console.log(error)
         setNotification({
-          message: `Person '${persons.find(person => person.id === id).name}' was already deleted from server`,
+          message: error.response.data,
           error: true
         })
         setTimeout(() => {
@@ -85,9 +85,8 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            console.log(error)
             setNotification({
-              message: `Person '${newObj.name}' was already deleted from server`,
+              message: error.response.data.error,
               error: true
             })
             setTimeout(() => {
@@ -112,9 +111,8 @@ const App = () => {
           }, 5000)
         })
         .catch(error => {
-          console.log(error)
           setNotification({
-            message: `Person '${newObj.name}' was already deleted from server`,
+            message: error.response.data.error,
             error: true
           })
           setTimeout(() => {
