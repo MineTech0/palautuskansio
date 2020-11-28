@@ -8,7 +8,8 @@ export default function AnecdoteList() {
       if ( state.filter === "" ) {
         return state.anecdote
       }
-      return state.anecdote.filter(a => a.indexOf(state.filter) !== -1)
+      const anecdotes = state.anecdote
+      return anecdotes.filter(a => a.content.includes(state.filter))
     })
     const dispatch = useDispatch()
   
