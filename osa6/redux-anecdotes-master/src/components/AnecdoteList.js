@@ -1,36 +1,49 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { voteAnecdote, sortAnecdotes } from '../reducers/anecdoteReducer'
-import { voteNotification } from '../reducers/notificationReducer';
-export default function AnecdoteList() {
+import { connect } from 'react-redux'
+import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer';
 
-    const anecdotes = useSelector(state => {
-      if ( state.filter === "" ) {
-        return state.anecdote
-      }
-      const anecdotes = state.anecdote
-      return anecdotes.filter(a => a.content.includes(state.filter))
-    })
-    const dispatch = useDispatch()
-  
-    const vote = (id,content) => {
-      dispatch(voteAnecdote(id))
-      dispatch(sortAnecdotes())
-      dispatch(voteNotification(content))
+function AnecdoteList(props) {
+
+    const vote = (anecdote) => {
+      props.voteAnecdote(anecdote)
+      props.setNotification(`you voted ${anecdote.content}`, 5)
     }
   return (
     <>
-    {anecdotes.map(anecdote =>
+    {props.anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       )}
     </>
   );
 }
+const sort = (anecdotes) => {
+  return anecdotes.slice().sort(function (a, b) {
+    return b.votes - a.votes;
+  })
+}
+
+
+
+const mapStateToProps = state => {
+  if ( state.filter === "" ) {
+    return {anecdotes: sort(state.anecdote)}
+  }
+  return {anecdotes: sort(state.anecdote.filter(a => a.content.includes(state.filter)))}
+}
+
+const mapDispatchToProps = {
+  voteAnecdote,
+  setNotification
+}
+
+const ConnectedAnecdoteList = connect(mapStateToProps, mapDispatchToProps)(AnecdoteList)
+export default ConnectedAnecdoteList

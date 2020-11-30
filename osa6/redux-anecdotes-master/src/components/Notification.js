@@ -9,15 +9,7 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
-  useEffect(() => {
-    if(notification !== null){
-      setShow(true)
-      setTimeout(() => {
-        setShow(false)
-      }, 5000);
-    }
-  }, [notification])
-  if(notification ===null || !show ){
+  if(notification ===null){
     return null
   }
  
