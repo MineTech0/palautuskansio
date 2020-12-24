@@ -132,7 +132,7 @@ const resolvers = {
       return author
     },
     createUser: (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ ...args })
 
       return user.save().catch((error) => {
         throw new UserInputError(error.message, {
