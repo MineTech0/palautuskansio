@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
 export default function EditBorn({authors}) {
-  const [born, setBorn] = useState(null)
+  const [born, setBorn] = useState('')
   const [author, setAuthor] = useState('')
 
   const [ editBorn ] = useMutation(EDIT_AUTHOR,{
@@ -15,7 +15,7 @@ export default function EditBorn({authors}) {
 
     editBorn({  variables: { name: author, setBornTo: parseInt(born) } })
     setBorn('')
-    setAuthor(null)
+    setAuthor('')
   }
 
   return (
@@ -28,8 +28,8 @@ export default function EditBorn({authors}) {
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           >
-            {authors.map((a) => (
-              <option>{a.name}</option>
+            {authors.map((a, i) => (
+              <option key={i} value={a.name}>{a.name}</option>
             ))}
           </select>
         </div>
