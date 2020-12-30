@@ -4,13 +4,13 @@ import { ALL_BOOKS } from '../queries'
 import GenreSelect from './GenreSelect'
 
 const Books = (props) => {
-  const [getBooks, { loading, data }] = useLazyQuery(ALL_BOOKS,{fetchPolicy: "no-cache"});
+  const [getBooks, { loading, data }] = useLazyQuery(ALL_BOOKS);
 
   const [genre, setGenre] = useState(null)
 
   useEffect(() => {
     getBooks({variables: {genre}})
-  }, [genre])
+  },[genre])
 
   if (!props.show) {
     return null

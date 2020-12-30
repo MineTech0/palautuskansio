@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
 const User = require('./models/User')
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 console.log('connecting to', process.env.MONGODB_URI)
 
@@ -64,6 +66,9 @@ const typeDefs = gql`
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
   }
+  type Subscription {
+    bookAdded: Book!
+} 
 `
 
 const resolvers = {
@@ -94,21 +99,15 @@ const resolvers = {
       return [...new Set(genres)]
     }
   },
-  Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root.id })
-      return books.length
-    },
-  },
   Mutation: {
     addBook: async (root, args, context) => {
       if (!context.currentUser) {
         throw new AuthenticationError("not authenticated")
       }
   
-      let author = await Author.findOne({ name: args.author })
+      let author = await Author.findOneAndUpdate({ name: args.author },{ $inc: { bookCount: 1 }})
       if (!author) {
-        author = await Author.create({ name: args.author })
+        author = await Author.create({ name: args.author, bookCount: 1 })
       }
       const book = new Book({ ...args, author: author._id })
       try {
@@ -119,6 +118,8 @@ const resolvers = {
         })
       }
       book.author = author
+      console.log(book)
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -164,6 +165,11 @@ const resolvers = {
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    },
+  },
 }
 
 const server = new ApolloServer({
@@ -182,6 +188,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
