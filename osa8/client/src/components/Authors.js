@@ -38,7 +38,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-        <EditBorn authors={result.data.allAuthors} />
+        <EditBorn authors={result.data.allAuthors} setError={props.setError} />
     </div>
   )
 }

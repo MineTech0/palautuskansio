@@ -40,6 +40,13 @@ export const GENRES = gql`
     genres
   }
 `
+export const FAVORITE_GENRE = gql`
+  query {
+    me {
+      favoriteGenre
+    }
+  }
+`
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
