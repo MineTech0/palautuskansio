@@ -7,12 +7,12 @@ interface exerciseCalculatorI {
   target: number;
   average: number;
 }
-const exerciseCalculator = (
+export const exerciseCalculator = (
   activity: Array<number>,
   target: number
 ): exerciseCalculatorI => {
   const sum: number = activity.reduce((s, a) => s + a, 0);
-  let retObj: exerciseCalculatorI = {
+  const retObj: exerciseCalculatorI = {
     periodLength: activity.length,
     trainingDays: activity.reduce((s, a) => (a !== 0 ? s + 1 : s), 0),
     success: activity.every((v) => v >= target),
@@ -31,21 +31,21 @@ const exerciseCalculator = (
   }
   return retObj;
 };
-if (process.argv.length < 4) throw new Error("Not enough arguments");
+// if (process.argv.length < 4) throw new Error("Not enough arguments");
 
-const target: number = Number(process.argv[2]);
-if (isNaN(target)) throw new Error("Provided target is not number!");
+// const target = Number(process.argv[2]);
+// if (isNaN(target)) throw new Error("Provided target is not number!");
 
-let activity: number[] = process.argv
-  .filter((v, i) => {
-    if (i > 2) {
-      return true;
-    }
-  })
-  .map((v) => {
-    const n: number = Number(v);
-    if (isNaN(n)) throw new Error(`${v} is not number!`);
-    return n;
-  });
+// const activity: number[] = process.argv
+//   .filter((_v, i) => {
+//     if (i > 2) {
+//       return true;
+//     } else return false;
+//   })
+//   .map((v) => {
+//     const n = Number(v);
+//     if (isNaN(n)) throw new Error(`${v} is not number!`);
+//     return n;
+//   });
 
-console.log(exerciseCalculator(activity, target));
+// console.log(exerciseCalculator(activity, target));
