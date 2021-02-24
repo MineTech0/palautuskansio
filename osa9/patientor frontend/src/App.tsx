@@ -36,9 +36,7 @@ const App: React.FC = () => {
       }
     };
     fetchPatientList();
-    if(Object.keys(diagnosis).length === 0){
-      fetchDiagnosis();
-    }
+    fetchDiagnosis();
   }, [dispatch]);
 
   return (

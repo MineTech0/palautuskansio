@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Icon } from 'semantic-ui-react';
 import { HealthCheckEntry as HealthCheckEntryType} from '../types';
+import DiagnosisList from './DiagnosisList';
 
 const HealthCheckEntry: React.FC<{ entry: HealthCheckEntryType }> = ({ entry }) => {
 
@@ -28,6 +29,7 @@ const HealthCheckEntry: React.FC<{ entry: HealthCheckEntryType }> = ({ entry }) 
           <i>{entry.description}</i>
           <br/>
           <Icon name="heart" color={getHealth()}/>
+          <DiagnosisList diagnosisCodes={entry.diagnosisCodes} />
         </Card.Description>
       </Card.Content>
     </Card>

@@ -1,4 +1,4 @@
-import { Gender, NewPatientEntry } from './types';
+import { Gender, NewPatientEntry, NewEntry } from './types';
 
 const toNewPatientEntry = (object: any): NewPatientEntry => {
   const newEntry: NewPatientEntry = {
@@ -60,5 +60,51 @@ const parseName = (name: any): string => {
     }
     return gender;
   };
+  const parseString = (string: any): string => {
+    if (!string || !isString(string)) {
+      throw new Error(`Incorrect or missing parameter`);
+    }
+    return string;
+  };
+  
+const toNewEntry = (entry: any): NewEntry => {
+    const newEntry = {
+      description: parseString(entry.description),
+      date: parseDate(entry.date),
+      specialist: parseString(entry.specialist),
+      diagnosisCodes: entry.diagnosisCodes || []
+      
+    };
+    switch (entry.type) {
+      case 'Hospital':
+        return {
+          ...newEntry,
+          type: 'Hospital',
+          discharge: {
+            date: parseDate(entry.discharge.date),
+            criteria: parseString(entry.discharge.criteria)
+          }
+        };
+      case 'HealthCheck':
+        return {
+          ...newEntry,
+          type: 'HealthCheck',
+          healthCheckRating: entry.healthCheckRating
+        };
+      case 'OccupationalHealthcare':
+        return {
+          ...newEntry,
+          type: 'OccupationalHealthcare',
+          employerName: parseString(entry.employerName),
+          sickLeave: {
+            startDate: parseDate(entry.sickLeave.startDate),
+            endDate: parseDate(entry.sickLeave.endDate)
+          }
+        };
+      default:
+        throw new Error("no type specified");
+        
+    }
+  };
 
-export default toNewPatientEntry;
+export { toNewPatientEntry, toNewEntry};

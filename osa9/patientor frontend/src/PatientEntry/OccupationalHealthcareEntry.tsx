@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Icon } from 'semantic-ui-react';
 import { OccupationalHealthcareEntry as OccupationalHealthcareEntryType  } from '../types';
+import DiagnosisList from './DiagnosisList';
 
 const OccupationalHealthcareEntry: React.FC<{ entry: OccupationalHealthcareEntryType }> = ({ entry }) => {
   return (
@@ -9,7 +10,9 @@ const OccupationalHealthcareEntry: React.FC<{ entry: OccupationalHealthcareEntry
         <Card.Header>
           {entry.date} <Icon name="stethoscope" /> {entry?.employerName}
         </Card.Header>
-        <Card.Description>{entry.description}</Card.Description>
+        <Card.Description>{entry.description}
+        <DiagnosisList diagnosisCodes={entry.diagnosisCodes} />
+        </Card.Description>
       </Card.Content>
     </Card>
   );
